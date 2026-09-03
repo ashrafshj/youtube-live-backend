@@ -15,6 +15,7 @@ cache = {
     "time": 0
 }
 
+
 def get_hls_url():
     now = time.time()
 
@@ -23,13 +24,13 @@ def get_hls_url():
 
     result = subprocess.run(
         [
-    "yt-dlp",
-    "--js-runtimes", "deno",
-    "--remote-components", "ejs:github",
-    "-g",
-    "--no-playlist",
-    f"https://www.youtube.com/watch?v={VIDEO_ID}"
-],
+            "yt-dlp",
+            "--js-runtimes", "deno",
+            "--remote-components", "ejs:github",
+            "-g",
+            "--no-playlist",
+            f"https://www.youtube.com/watch?v={VIDEO_ID}"
+        ],
         capture_output=True,
         text=True,
         timeout=30
@@ -38,7 +39,9 @@ def get_hls_url():
     url = result.stdout.strip()
 
     if not url.startswith("http"):
-        raise Exception(result.stderr.strip() or "HLS URL not found")
+        raise Exception(
+            result.stderr.strip() or "HLS URL not found"
+        )
 
     cache["url"] = url
     cache["time"] = now
@@ -83,7 +86,11 @@ def live(video_id):
             else:
                 full_url = urllib.parse.urljoin(base, url)
 
-            return 'URI="/proxy?url=' + urllib.parse.quote(full_url, safe="") + '"'
+            return (
+                'URI="/proxy?url=' +
+                urllib.parse.quote(full_url, safe="") +
+                '"'
+            )
 
         playlist = re.sub(
             r'URI="([^"]+)"',
@@ -150,4 +157,7 @@ def proxy():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    app.run(
+        host="0.0.0.0",
+        port=port
+    )
