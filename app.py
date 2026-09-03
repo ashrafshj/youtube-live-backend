@@ -23,11 +23,13 @@ def get_hls_url():
 
     result = subprocess.run(
         [
-            "yt-dlp",
-            "-g",
-            "--no-playlist",
-            f"https://www.youtube.com/watch?v={VIDEO_ID}"
-        ],
+    "yt-dlp",
+    "--js-runtimes", "deno",
+    "--remote-components", "ejs:github",
+    "-g",
+    "--no-playlist",
+    f"https://www.youtube.com/watch?v={VIDEO_ID}"
+],
         capture_output=True,
         text=True,
         timeout=30
